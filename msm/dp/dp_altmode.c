@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2021, The Linux Foundation. All rights reserved.
  */
 
 #include <linux/slab.h>
@@ -137,16 +137,17 @@ static int dp_altmode_notify(void *priv, void *data, size_t len)
 	altmode->dp_altmode.base.hpd_high = !!hpd_state;
 	altmode->dp_altmode.base.hpd_irq = !!hpd_irq;
 	altmode->dp_altmode.base.multi_func = force_multi_func ? true :
-		!(pin == DPAM_HPD_C || pin == DPAM_HPD_E);
+		!(pin == DPAM_HPD_C || pin == DPAM_HPD_E ||
+		pin == DPAM_HPD_OUT);
 
-	DP_LOG("payload=0x%x\n", dp_data);
-	DP_LOG("port_index=%d, orientation=%d, pin=%d, hpd_state=%d\n",
+	DP_DEBUG("payload=0x%x\n", dp_data);
+	DP_DEBUG("port_index=%d, orientation=%d, pin=%d, hpd_state=%d\n",
 			port_index, orientation, pin, hpd_state);
-	DP_LOG("multi_func=%d, hpd_high=%d, hpd_irq=%d\n",
+	DP_DEBUG("multi_func=%d, hpd_high=%d, hpd_irq=%d\n",
 			altmode->dp_altmode.base.multi_func,
 			altmode->dp_altmode.base.hpd_high,
 			altmode->dp_altmode.base.hpd_irq);
-	DP_LOG("connected=%d\n", altmode->connected);
+	DP_DEBUG("connected=%d\n", altmode->connected);
 	SDE_EVT32_EXTERNAL(dp_data, port_index, orientation, pin, hpd_state,
 			altmode->dp_altmode.base.multi_func,
 			altmode->dp_altmode.base.hpd_high,

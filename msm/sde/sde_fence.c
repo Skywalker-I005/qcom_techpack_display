@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
- * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
  */
 
 #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
@@ -131,7 +131,7 @@ static bool sde_fence_signaled(struct dma_fence *fence)
 	struct sde_fence *f = to_sde_fence(fence);
 	bool status;
 
-	status = (int)((fence->seqno - f->ctx->done_count) <= 0);
+	status = ((int)(fence->seqno - f->ctx->done_count) <= 0);
 	SDE_DEBUG("status:%d fence seq:%d and timeline:%d\n",
 			status, fence->seqno, f->ctx->done_count);
 	return status;
@@ -192,13 +192,13 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 	signed int fd = -EINVAL;
 	struct sde_fence_context *ctx = fence_ctx;
 
-	if (unlikely(!ctx)) {
+	if (!ctx) {
 		SDE_ERROR("invalid context\n");
 		goto exit;
 	}
 
 	sde_fence = kzalloc(sizeof(*sde_fence), GFP_KERNEL);
-	if (unlikely(!sde_fence))
+	if (!sde_fence)
 		return -ENOMEM;
 
 	sde_fence->ctx = fence_ctx;
@@ -210,7 +210,7 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 
 	/* create fd */
 	fd = get_unused_fd_flags(0);
-	if (unlikely(fd < 0)) {
+	if (fd < 0) {
 		SDE_ERROR("failed to get_unused_fd_flags(), %s\n",
 							sde_fence->name);
 		dma_fence_put(&sde_fence->base);
@@ -219,7 +219,7 @@ static int _sde_fence_create_fd(void *fence_ctx, uint32_t val)
 
 	/* create fence */
 	sync_file = sync_file_create(&sde_fence->base);
-	if (unlikely(sync_file == NULL)) {
+	if (sync_file == NULL) {
 		put_unused_fd(fd);
 		fd = -EINVAL;
 		SDE_ERROR("couldn't create fence, %s\n", sde_fence->name);
@@ -327,7 +327,7 @@ int sde_fence_create(struct sde_fence_context *ctx, uint64_t *val,
 	int fd, rc = -EINVAL;
 	unsigned long flags;
 
-	if (unlikely(!ctx || !val)) {
+	if (!ctx || !val) {
 		SDE_ERROR("invalid argument(s), fence %d, pval %d\n",
 				ctx != NULL, val != NULL);
 		return rc;
