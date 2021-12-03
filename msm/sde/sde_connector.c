@@ -990,7 +990,14 @@ void sde_connector_helper_bridge_enable(struct drm_connector *connector)
 	if (!sde_in_trusted_vm(sde_kms) && c_conn->bl_device) {
 		c_conn->bl_device->props.power = FB_BLANK_UNBLANK;
 		c_conn->bl_device->props.state &= ~BL_CORE_FBBLANK;
+		// ASUS BSP Display +++
+#if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
+		// only set bl in charger mode from sde driver
+		if (anakin_get_charger_mode())
+			backlight_update_status(c_conn->bl_device);
+#else
 		backlight_update_status(c_conn->bl_device);
+#endif
 	}
 	c_conn->panel_dead = false;
 }

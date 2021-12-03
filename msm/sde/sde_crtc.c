@@ -3817,6 +3817,7 @@ void sde_crtc_commit_kickoff(struct drm_crtc *crtc,
 
 		/* ASUS BSP Display +++ */
 		anakin_crtc_display_commit(encoder, crtc);
+		anakin_set_dc_bl_process(encoder, crtc);
 
 		sde_encoder_kickoff(encoder, false, true);
 	}
