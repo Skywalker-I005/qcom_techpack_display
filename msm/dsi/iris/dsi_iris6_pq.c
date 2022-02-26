@@ -696,7 +696,7 @@ int iris_dcDimming_backlight_set(u32 *values)
 
 	//rc = iris_update_backlight(bl_lvl);
 	len = iris_end_dpp(true);
-	// ASUS BSP Display
+// ASUS BSP Display
 #if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
 	// to notify the dimmingEnable
 	anakin_iris_dc_set(dimmingEnable);

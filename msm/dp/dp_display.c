@@ -68,33 +68,18 @@ enum dp_display_states {
 };
 
 /* ASUS BSP Display +++ */
-#if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
 // for skip hdcp on unlock device
-char verified_boot_state[20];
-char unlock[2];
-static int __init verified_boot_state_param(char *line)
-{
-	strlcpy(verified_boot_state, line, sizeof(verified_boot_state));
-	return 1;
-}
-
-__setup("androidboot.verifiedbootstate=", verified_boot_state_param);
-
-static int __init unlock_param(char *line)
-{
-	strlcpy(unlock, line, sizeof(unlock));
-	return 1;
-}
-
-__setup("UNLOCKED", unlock_param);
+#if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
+extern char g_verified_boot_state[20];
+extern char g_unlock[2];
 
 static bool is_unlock(void)
 {
 	static const char unlock_state[] = "orange";
 	static const char unlock_param[] = "Y";
 
-	return (!strncmp(verified_boot_state, unlock_state, sizeof(unlock_state))
-		|| !strncmp(unlock, unlock_param, sizeof(unlock_param)));
+	return (!strncmp(g_verified_boot_state, unlock_state, sizeof(unlock_state))
+		|| !strncmp(g_unlock, unlock_param, sizeof(unlock_param)));
 }
 #endif
 /* ASUS BSP Display --- */
@@ -3103,7 +3088,7 @@ static int dp_display_setup_colospace(struct dp_display *dp_display,
 	struct dp_display_private *dp;
 
 	if (!dp_display || !panel) {
-		DP_ERR("invalid input\n");
+		pr_err("invalid input\n");
 		return -EINVAL;
 	}
 

@@ -3133,7 +3133,7 @@ void dp_panel_put(struct dp_panel *dp_panel)
 
 /* ASUS BSP Display +++ */
 #if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
-bool asus_is_hdmi = false;
+extern bool asus_is_hdmi;
 
 static bool dp_asus_is_hdmi_bridge(struct dp_panel *dp_panel)
 {

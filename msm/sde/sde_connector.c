@@ -571,7 +571,7 @@ void sde_connector_schedule_status_work(struct drm_connector *connector,
 				c_conn->esd_status_interval :
 					STATUS_CHECK_INTERVAL_MS;
 			/* Schedule ESD status check */
-			schedule_delayed_work(&c_conn->status_work,
+			queue_delayed_work(system_power_efficient_wq, &c_conn->status_work,
 				msecs_to_jiffies(interval));
 			c_conn->esd_status_check = true;
 		} else {
@@ -990,7 +990,7 @@ void sde_connector_helper_bridge_enable(struct drm_connector *connector)
 	if (!sde_in_trusted_vm(sde_kms) && c_conn->bl_device) {
 		c_conn->bl_device->props.power = FB_BLANK_UNBLANK;
 		c_conn->bl_device->props.state &= ~BL_CORE_FBBLANK;
-		// ASUS BSP Display +++
+// ASUS BSP Display +++
 #if defined ASUS_ZS673KS_PROJECT || defined ASUS_PICASSO_PROJECT
 		// only set bl in charger mode from sde driver
 		if (anakin_get_charger_mode())
@@ -1842,7 +1842,7 @@ static int _sde_connector_lm_preference(struct sde_connector *sde_conn,
 		return -EINVAL;
 	}
 
-	sde_conn->lm_mask = sde_hw_mixer_set_preference(sde_kms->catalog, num_lm, disp_type);
+	sde_hw_mixer_set_preference(sde_kms->catalog, num_lm, disp_type);
 
 	return ret;
 }
@@ -2529,7 +2529,7 @@ static void sde_connector_check_status_work(struct work_struct *work)
 		/* If debugfs property is not set then take default value */
 		interval = conn->esd_status_interval ?
 			conn->esd_status_interval : STATUS_CHECK_INTERVAL_MS;
-		schedule_delayed_work(&conn->status_work,
+		queue_delayed_work(system_power_efficient_wq, &conn->status_work,
 			msecs_to_jiffies(interval));
 		return;
 	}
